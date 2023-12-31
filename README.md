@@ -3,6 +3,8 @@ Visual QnA is an innovative project that combines image recognition and natural 
 
 ### How to use this application 🤔💭??
 * Step 1: Clone this repo
+* Create Virtual Enviornment if required using (conda create -p ./venv python=3.11 -y)
+* Activate the environment using (conda activate ./venv)
 * Step 2: Go to Terminal and run the command ( pip install -r requirements.txt )
 * Now all required libraries and frameworks will be installed
 * Step 3: Create Gemini Pro API key from this [link](https://makersuite.google.com/app/apikey)
