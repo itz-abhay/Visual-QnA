@@ -43,6 +43,7 @@ if 'chat_history' not in st.session_state:
 
 uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
 
+# txt_input = "Hello..."
 txt_input=st.text_input("Input: ",key="input")
 submit=st.button("Ask the question")
 
@@ -51,11 +52,15 @@ if submit :
     response  = ""
     if uploaded_image:
         st.image(uploaded_image)
-        response = get_gemini_vision_response(uploaded_image,txt_input)
         if txt_input == "":
-            txt_input = "Read the given Image"
+            txt_input = "Read the given Image and tell me a short blog about it."
+        response = get_gemini_vision_response(uploaded_image,txt_input)
+        
     else:
-        response=get_gemini_response(txt_input)
+        if txt_input:
+            response=get_gemini_response(txt_input)
+        else:
+            st.warning("Please Enter some prompt...")
 
     # st.subheader("The Response is: ")
     st.subheader(txt_input)
