@@ -42,10 +42,10 @@ if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
 uploaded_image = st.file_uploader("Upload your Image", type=["jpg", "jpeg", "png"])
-camera=st.button("want to click image??")
+# camera=st.button("want to click image??")
 
-if camera:
-    uploaded_image = st.camera_input("snap Time🏞️")
+# if camera:
+#     uploaded_image = st.camera_input("snap Time🏞️")
 
 # txt_input = "Hello..."
 txt_input=st.text_input("Input: ",key="input")
