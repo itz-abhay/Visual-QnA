@@ -90,9 +90,10 @@ if 'chat_history' not in st.session_state:
 
 
 txt_input=st.text_input("Input: ",key="input")
+submit = st.button("Ask..")
 # txt_input = st.chat_input("Ask your query...")
 
-if txt_input  :
+if txt_input or submit :
 
     users = st.chat_message("user")
     users.markdown( txt_input)
