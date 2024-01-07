@@ -57,7 +57,7 @@ with st.sidebar:
     # st.markdown("---")
     st.markdown("# About")
     st.markdown(
-       "Simle LLM model using Gemini. "
+       "Simple LLM model using Gemini. "
        "Upload the picture📷 and ask query related to picture. "
        "You can ask questions without upload pictures as well."
             )
@@ -93,17 +93,15 @@ txt_input=st.text_input("Input: ",key="input")
 submit = st.button("Ask..")
 # txt_input = st.chat_input("Ask your query...")
 
-if txt_input or submit :
+if txt_input or submit  :
 
     users = st.chat_message("user")
     users.markdown( txt_input)
     response  = ""
     if uploaded_image:
-        
         if txt_input == "":
             txt_input = "Read the given Image and tell me a short blog about it."
         response = get_gemini_vision_response(uploaded_image,txt_input)
-        
     else:
         if txt_input:
             response=get_gemini_response(txt_input)
@@ -112,14 +110,15 @@ if txt_input or submit :
 
     if uploaded_image:
         st.image(uploaded_image, width = 200)
-
+    
+    # Add user query and response to session state chat history
+    st.session_state['chat_history'].append(("You ", txt_input))
     message = st.chat_message("assistant")
     for chunk in response:
         message.write(chunk.text)
-        st.session_state['chat_history'].insert(0,("Bot ", chunk.text))
+        st.session_state['chat_history'].append(("Bot ", chunk.text))
     
-    # Add user query and response to session state chat history
-    st.session_state['chat_history'].insert(0,("You ", txt_input))
+
 
 # ---------------------------History Section--------------------------------
 with st.expander("History"):
