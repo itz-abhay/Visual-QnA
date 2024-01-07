@@ -7,8 +7,12 @@ import os
 from PIL import Image
 import PIL.Image
 import google.generativeai as genai
+import time
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+
+# ------------------------Gemini Api------------------------------------
 
 ## function to load Gemini Pro model and get repsonses
 def get_gemini_response(question):
@@ -29,33 +33,72 @@ def get_gemini_vision_response(uploaded_image,txt_input):
     # Uncomment the below line if you want to stream the conversation 
     # response = model.generate_content([txt_input,img],stream=True)
     return response
+# -----------------------------------Gemini----------------------------------
 
 
 ##initialize our streamlit app
 
+# ----------------------------Header--------------------------------
 st.set_page_config(page_title="Q&A Demo")
+c30, c31, c32 = st.columns([0.2, 0.1, 1.5])
+with c30:
+    st.caption("")
+    st.image("Google-Gemini-AI-Logo (1).png",width = 120)
+with c32:
+    st.title(" Talk🗣️ with your Images ")
+# ----------------------------------------------------------------------
 
-st.header("Visual QnA: Explore the World Through Your Images")
+# ---------------------------------Welcome Balooons----------------
+# st.balloons()
+# -----------------------------------------------------------------
+
+# ---------------------------SideBar----------------------------------
+with st.sidebar:
+    # st.markdown("---")
+    st.markdown("# About")
+    st.markdown(
+       "Simle LLM model using Gemini. "
+       "Upload the picture📷 and ask query related to picture. "
+       "You can ask questions without upload pictures as well."
+            )
+    st.markdown(
+       "This tool is a work in progress. "
+            )
+    st.markdown("---")
+
+    st.markdown("# 🏡")
+    st.markdown(
+       "Hope you like it. 😊"
+            )
+    st.markdown(" Powered by: 🦜 LangChain + Gemini + Streamlit")
+# ------------------------------SideBar closed-------------------------------
+
+
+# ------------------Tabs------------------------------------
+tab1, tab2 = st.tabs(([":blue[**Chat**]", ":blue[**Chat with image** 📷]"]))
+with tab1:
+    st.header("")
+with tab2:
+    # st.header("image")
+    uploaded_image = st.file_uploader("Upload your Image", type=["jpg", "jpeg", "png"])
+
+# -----------------------------------------------------
 
 # Initialize session state for chat history if it doesn't exist
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
-uploaded_image = st.file_uploader("Upload your Image", type=["jpg", "jpeg", "png"])
-# camera=st.button("want to click image??")
 
-# if camera:
-#     uploaded_image = st.camera_input("snap Time🏞️")
-
-# txt_input = "Hello..."
 txt_input=st.text_input("Input: ",key="input")
-submit=st.button("Ask the question")
+# txt_input = st.chat_input("Ask your query...")
 
-# if submit and txt_input:
-if submit :
+if txt_input  :
+
+    users = st.chat_message("user")
+    users.markdown( txt_input)
     response  = ""
     if uploaded_image:
-        st.image(uploaded_image)
+        
         if txt_input == "":
             txt_input = "Read the given Image and tell me a short blog about it."
         response = get_gemini_vision_response(uploaded_image,txt_input)
@@ -66,15 +109,19 @@ if submit :
         else:
             st.warning("Please Enter some prompt...")
 
-    # st.subheader("The Response is: ")
-    st.subheader(txt_input)
+    if uploaded_image:
+        st.image(uploaded_image, width = 200)
+
+    message = st.chat_message("assistant")
     for chunk in response:
-        st.write(chunk.text)
-        st.session_state['chat_history'].insert(0,("Bot", chunk.text))
+        message.write(chunk.text)
+        st.session_state['chat_history'].insert(0,("Bot ", chunk.text))
     
     # Add user query and response to session state chat history
-    st.session_state['chat_history'].insert(0,("You", txt_input))
-st.subheader("Chat History:")
-    
-for role, text in st.session_state['chat_history']:
-    st.write(f"{role}: {text}")
+    st.session_state['chat_history'].insert(0,("You ", txt_input))
+
+# ---------------------------History Section--------------------------------
+with st.expander("History"):
+    for role, text in st.session_state['chat_history']:
+        st.write(f"{role}: {text}")
+# -------------------------------------------------------------------------- 
