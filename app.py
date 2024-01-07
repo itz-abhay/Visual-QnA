@@ -89,9 +89,18 @@ if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
 
-txt_input=st.text_input("Input: ",key="input")
+# -----------------------Input Text session------------------------------
+if 'something' not in st.session_state:
+    st.session_state.something = ''
+
+def submit():
+    st.session_state.something = st.session_state.widget
+    st.session_state.widget = ''
+
+st.text_input('Something', key='widget', on_change=submit)
+txt_input = st.session_state.something
 submit = st.button("Ask..")
-# txt_input = st.chat_input("Ask your query...")
+# ---------------------------------------------------------------------------
 
 if txt_input or submit  :
 
